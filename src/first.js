@@ -2,7 +2,7 @@ var Converter = function () {
 
 	// private attributes
 	listAngkaTerbilang = {
-		'nol': 0, 'satu': 1, 'dua': 2, 'tiga': 3, 'empat': 4, 'lima': 5, 'enam': 6, 'tujuh': 7, 'delapan': 8, 'sembilan': 9
+		'nol': '0', 'satu': 1, 'dua': 2, 'tiga': 3, 'empat': 4, 'lima': 5, 'enam': 6, 'tujuh': 7, 'delapan': 8, 'sembilan': 9
 	}
 
 	/***
@@ -27,7 +27,112 @@ var Converter = function () {
 			indexBelas = results.indexOf('belas')
 		}
 
-		return results
+		return ubahKataSpesialMenjadiNol(results)
+	}
+
+	/** 
+	* fungsi ini akan mengubah kata ratus ribu, ribu, ratus menjadi 0 
+	* sesuai dengan kebutuhan
+	*/
+	function ubahKataSpesialMenjadiNol(potonganKalimatTerbilang) {
+		var ratusRibuan = potonganKalimatTerbilang.indexOf('ratus') < potonganKalimatTerbilang.indexOf('ribu') 
+			&& potonganKalimatTerbilang.indexOf('ratus') > -1 && potonganKalimatTerbilang.indexOf('ribu') > -1
+
+		var puluhRibuan = potonganKalimatTerbilang.indexOf('puluh') < potonganKalimatTerbilang.indexOf('ribu') 
+			&& potonganKalimatTerbilang.indexOf('puluh') > -1 && potonganKalimatTerbilang.indexOf('ribu') > -1
+
+		console.log(ratusRibuan)
+
+		// cek ribuan
+		var indexRibuan = potonganKalimatTerbilang.indexOf('ribu')
+		if (indexRibuan > -1) {
+			// hapus kata ribu dari array
+			potonganKalimatTerbilang.splice(indexRibuan, 1)
+
+			panjangArray = potonganKalimatTerbilang.length
+			// panjangArray -= indexRibuan - 1
+
+			// apakah panjang array sudah sama dengan panjang seharusnya?
+			panjangSeharusnya = 4
+
+			if (ratusRibuan) {
+				panjangSeharusnya = 6
+			} else if (potonganKalimatTerbilang.indexOf('puluh') > -1){
+				panjangSeharusnya = 5
+			}
+
+			console.log(potonganKalimatTerbilang)
+			console.log("cek ribuan, panjangSeharusnya -> " + panjangSeharusnya)
+			console.log('panjang array -> ' + panjangArray)
+
+			if (panjangArray < panjangSeharusnya) {
+				selisih = Math.abs(panjangArray - panjangSeharusnya)
+				console.log('ribuan kurang dari ' + panjangSeharusnya)
+				potonganKalimatTerbilang = nolTambahan(potonganKalimatTerbilang, indexRibuan, selisih)
+			}
+			console.log()
+		}
+
+		// cek ratusan
+		var indexRatusan = potonganKalimatTerbilang.indexOf('ratus')
+		if (indexRatusan > -1) {
+			
+			potonganKalimatTerbilang.splice(indexRatusan, 1)
+
+			panjangArray = potonganKalimatTerbilang.length
+			panjangArray -= indexRatusan - 1
+
+			panjangSeharusnya = 3
+
+			if (ratusRibuan) {
+				panjangSeharusnya = 6
+				// if (potonganKalimatTerbilang.indexOf('puluh') > -1) {
+				// 	panjangSeharusnya = 7
+				// }
+			}
+
+			console.log(potonganKalimatTerbilang)
+			console.log("cek ratusan, panjangSeharusnya -> " + panjangSeharusnya)
+			console.log("pasjang array -> " + potonganKalimatTerbilang.length)
+			// apakah panjang array sudah sama dengan panjang seharusnya?
+			if (panjangArray < panjangSeharusnya) {
+				selisih = Math.abs(panjangArray - panjangSeharusnya)
+				console.log('ratusan kurang dari ' + panjangSeharusnya)
+				potonganKalimatTerbilang = nolTambahan(potonganKalimatTerbilang, indexRatusan, selisih)
+			}
+
+		}
+
+		// cek puluhan
+		var index = potonganKalimatTerbilang.indexOf('puluh')
+		if (index > -1) {
+			potonganKalimatTerbilang.splice(index, 1)
+
+			panjangArray = potonganKalimatTerbilang.length
+			panjangArray -= index - 1
+
+			panjangSeharusnya = puluhRibuan ? 5	: 2
+			// apakah panjang array sudah sama dengan panjang seharusnya?
+			if (panjangArray < panjangSeharusnya) {
+				selisih = Math.abs(panjangArray - panjangSeharusnya)
+				console.log('ribuan kurang dari ' + panjangSeharusnya)
+				potonganKalimatTerbilang = nolTambahan(potonganKalimatTerbilang, index, selisih)
+			}
+
+		}
+
+		return potonganKalimatTerbilang
+	}
+
+	function nolTambahan(potonganKalimatTerbilang, index, jumlahNol) {
+		console.log([potonganKalimatTerbilang, index, jumlahNol])
+		for (var i = index; i < index + jumlahNol; i++) {
+			// potonganKalimatTerbilang[i] = 'nol'
+			potonganKalimatTerbilang.splice(i, 0, 'nol')
+		}
+
+		console.log(potonganKalimatTerbilang)
+		return potonganKalimatTerbilang
 	}
 
 	return {
@@ -35,6 +140,7 @@ var Converter = function () {
 			var result = ''; // variable untuk menyimpan hasil
 			// potong kalimat terbilang dengan spasi
 			var potonganKalimatTerbilang = potong(kalimatTerbilang)
+			console.log('\ninputan setelah diproses: ')
 			console.log(potonganKalimatTerbilang)
 			// lakukan perulangan satu-satu, dari depan.
 			
@@ -44,8 +150,13 @@ var Converter = function () {
 
 				// jika hasil terjemah atau kata tidak ditemukan?
 				if (!hasilTerjemah) {
-					// biar tidak undefined, jadikan string kosong
-					hasilTerjemah = ''
+					// jika masih ada kata spesial yang tersisa
+					if (kata == 'ribu' || kata == 'ratus' || kata == 'puluh') {
+						hasilTerjemah = '0'
+					} else {
+						// biar tidak undefined, jadikan string kosong
+						hasilTerjemah = ''
+					}
 				}
 
 				result += hasilTerjemah
@@ -56,64 +167,8 @@ var Converter = function () {
 	}
 }
 
-function encode(angka) {
-	if (angka.toLowerCase() == "satu") 
-		return 1;
-	else if(angka.toLowerCase() == "dua")
-		return 2;
-	else if(angka.toLowerCase() == "tiga")
-		return 3;
-	else if(angka.toLowerCase() == "empat")
-		return 4;
-
-	else if(angka.toLowerCase() == "lima")
-		return 5;
-	else if(angka.toLowerCase() == "enam")
-		return 6;
-	else if(angka.toLowerCase() == "tujuh")
-		return 7;
-	else if(angka.toLowerCase() == "delapan")
-		return 8;
-	else if(angka.toLowerCase() == "sembilan")
-		return 9;
-	else if(angka.toLowerCase() == "sepuluh")
-		return 10;
-	else 
-		return angka;
-}
-
-function proses(angka1, angka2) {
-	return angka1 + angka2;
-}
-
-function decode(hasil) {
-	if (hasil == 1) 
-		return "satu";
-	else if(hasil == 2)
-		return "dua";
-	else if(hasil == 3)
-		return "tiga";
-	else if(hasil == 4)
-		return "empat";
-	else if(hasil == 5)
-		return "lima";
-	else if(hasil == 6)
-		return "enam";
-	else if(hasil == 7)
-		return "tujuh";
-	else if(hasil == 8)
-		return "delapan";
-	else if(hasil == 9)
-		return "sembilan";
-	else if(hasil == 10)
-		return "sepuluh";
-	else 
-		return hasil;
-}
-
-
 var converter = new Converter()
-var inputan = "lima ratus sembilan belas"
+var inputan = "empat ratus lima puluh enam ribu tujuh ratus"
 var result = converter.convert(inputan)
 
 console.log(inputan)
