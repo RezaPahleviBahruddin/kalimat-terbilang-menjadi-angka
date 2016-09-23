@@ -1,3 +1,35 @@
+var Converter = function () {
+
+	// private attributes
+	listAngkaTerbilang = {
+		'satu': 1, 'dua': 2, 'tiga': 3, 'empat': 4, 'lima': 5, 'enam': 6, 'tujuh': 7, 'delapan': 8, 'sembilan': 9
+	}
+
+	return {
+		convert: function (kalimatTerbilang) {
+			var result = ''; // variable untuk menyimpan hasil
+			// potong kalimat terbilang dengan spasi
+			var potonganKalimatTerbilang = kalimatTerbilang.split(' ')
+			console.log(potonganKalimatTerbilang)
+			// lakukan perulangan satu-satu, dari depan.
+			
+			for (key in potonganKalimatTerbilang) {
+				var kata = potonganKalimatTerbilang[key]
+				var hasilTerjemah = listAngkaTerbilang[kata]
+
+				// jika hasil terjemah atau kata tidak ditemukan?
+				if (!hasilTerjemah) {
+					// sementara skip dulu
+				}
+
+				result += hasilTerjemah
+			}
+
+			return result
+		}
+	}
+}
+
 function encode(angka) {
 	if (angka.toLowerCase() == "satu") 
 		return 1;
@@ -52,7 +84,11 @@ function decode(hasil) {
 		return hasil;
 }
 
-angka1 = "lima";
-angka2 = "tiga";
+// angka1 = "lima";
+// angka2 = "tiga";
 
-console.log(decode(proses(encode(angka1), encode(angka2))));
+// console.log(decode(proses(encode(angka1), encode(angka2))));
+
+converter = new Converter()
+result = converter.convert("satu dua tiga")
+console.log(result)
