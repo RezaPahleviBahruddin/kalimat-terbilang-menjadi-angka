@@ -5,11 +5,36 @@ var Converter = function () {
 		'satu': 1, 'dua': 2, 'tiga': 3, 'empat': 4, 'lima': 5, 'enam': 6, 'tujuh': 7, 'delapan': 8, 'sembilan': 9
 	}
 
+	/***
+	* fungsi ini digunakan untuk memotong inputan, menjadi array
+	**/
+	function potong (kalimatTerbilang) {
+		var results = kalimatTerbilang.split(' ')
+
+		// periksa jika ada kalimat belas
+		var indexBelas = results.indexOf('belas')
+
+		while (indexBelas > -1) { // jika ketemu
+			// ubah kata belas menjadi satu angka sebelumnya
+			// lalu angka sebelumnya diubah menjadi satu
+
+			// contoh -> sembilan belas -> jadi -> satu sembilan
+
+			results[indexBelas] = results[indexBelas-1];
+			results[indexBelas-1] = 'satu'
+
+			// periksa lagi apakah ada kata belas lainnya pada inputan
+			indexBelas = results.indexOf('belas')
+		}
+
+		return results
+	}
+
 	return {
 		convert: function (kalimatTerbilang) {
 			var result = ''; // variable untuk menyimpan hasil
 			// potong kalimat terbilang dengan spasi
-			var potonganKalimatTerbilang = kalimatTerbilang.split(' ')
+			var potonganKalimatTerbilang = potong(kalimatTerbilang)
 			console.log(potonganKalimatTerbilang)
 			// lakukan perulangan satu-satu, dari depan.
 			
@@ -19,7 +44,8 @@ var Converter = function () {
 
 				// jika hasil terjemah atau kata tidak ditemukan?
 				if (!hasilTerjemah) {
-					// sementara skip dulu
+					// biar tidak undefined, jadikan string kosong
+					hasilTerjemah = ''
 				}
 
 				result += hasilTerjemah
@@ -39,6 +65,7 @@ function encode(angka) {
 		return 3;
 	else if(angka.toLowerCase() == "empat")
 		return 4;
+
 	else if(angka.toLowerCase() == "lima")
 		return 5;
 	else if(angka.toLowerCase() == "enam")
@@ -84,11 +111,10 @@ function decode(hasil) {
 		return hasil;
 }
 
-// angka1 = "lima";
-// angka2 = "tiga";
 
-// console.log(decode(proses(encode(angka1), encode(angka2))));
+var converter = new Converter()
+var inputan = "lima ratus sembilan belas"
+var result = converter.convert(inputan)
 
-converter = new Converter()
-result = converter.convert("satu dua tiga")
+console.log(inputan)
 console.log(result)
