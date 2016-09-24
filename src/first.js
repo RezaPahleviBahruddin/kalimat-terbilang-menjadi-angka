@@ -10,7 +10,7 @@ var Converter = function () {
 			var result = ''; // variable untuk menyimpan hasil
 			// potong kalimat terbilang dengan spasi
 			var potonganKalimatTerbilang = kalimatTerbilang.split(' ')
-			console.log(potonganKalimatTerbilang)
+			// console.log(potonganKalimatTerbilang)
 			// lakukan perulangan satu-satu, dari depan.
 			
 			for (key in potonganKalimatTerbilang) {
